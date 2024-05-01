@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sncapp/Satsang.dart';
+import 'package:sncapp/Settings.dart';
 
 void main() {
   runApp(HomePage());
