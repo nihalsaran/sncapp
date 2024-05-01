@@ -1,50 +1,86 @@
 import 'package:flutter/material.dart';
 import 'package:sncapp/HomePage.dart';
+import 'package:sncapp/Settings.dart';
 
 void main() {
-  runApp(SettingsPage());
+  runApp(MemberList());
 }
 
-class SettingsPage extends StatelessWidget {
+class MemberList extends StatefulWidget {
+  @override
+  State<MemberList> createState() => _MemberListState();
+}
+
+class _MemberListState extends State<MemberList> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Settings',
+      title: 'Members List',
       theme: ThemeData(
         primarySwatch: Colors.green,
       ),
-      home: SettingsScreen(),
+      home: MembersListScreen(),
     );
   }
 }
 
-class SettingsScreen extends StatefulWidget {
+class MembersListScreen extends StatefulWidget {
   @override
-  _SettingsScreenState createState() => _SettingsScreenState();
+  State<MembersListScreen> createState() => _MembersListScreenState();
 }
 
-class _SettingsScreenState extends State<SettingsScreen> {
-  bool useInternet = false;
+class _MembersListScreenState extends State<MembersListScreen> {
+  final List<String> members = [
+    'Vadapalli Kamal Prakash',
+    'S Asha',
+    'Sirisha Garlapad',
+    'Rachana Garlapad',
+    'Grandhi Svam Sravya',
+    'Beerum Raghavendra Rao',
+    'Bhumi Reddy madhu sudan Reddy',
+    'Munaganooru Charana kumari',
+    'Tontanahal Swarup',
+    'Tantanahal Chandramouli',
+    'Tontanahal Dhana Shekhar',
+    'Tontanahal Guru charan',
+  ];
 
-  int _selectedIndex = 6;
+  int _selectedIndex = 1;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Settings',
+          'Members List',
           style: TextStyle(color: Colors.white),
         ),
         backgroundColor: Colors.green,
-        leading: Builder(
-          builder: (context) => IconButton(
-            icon: Icon(Icons.menu, color: Colors.white), // Add menu icon
+        actions: [
+          IconButton(
+            icon: Icon(
+              Icons.search,
+              color: Colors.white,
+            ),
+            onPressed: () {},
+          ),
+          IconButton(
+            icon: Icon(
+              Icons.replay,
+              color: Colors.white,
+            ),
+            onPressed: () {},
+          ),
+          IconButton(
+            icon: Icon(
+              Icons.more_vert,
+              color: Colors.white,
+            ),
             onPressed: () {
-              Scaffold.of(context).openDrawer();
+              // Add search functionality
             },
           ),
-        ),
+        ],
       ),
       drawer: Drawer(
         child: ListView(
@@ -105,7 +141,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 Navigator.push(
                   // Navigate to SettingsPage
                   context,
-                  MaterialPageRoute(builder: (context) => SettingsPage()),
+                  MaterialPageRoute(builder: (context) => MemberList()),
                 );
               },
             ),
@@ -250,32 +286,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ],
         ),
       ),
-      body: Padding(
-        padding: EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Center(
-              child: CircleAvatar(
-                radius: 40,
-                child: Icon(Icons.person, size: 60),
-              ),
+      body: ListView.builder(
+        itemCount: members.length,
+        itemBuilder: (context, index) {
+          return ListTile(
+            leading: CircleAvatar(
+              child: Icon(Icons.person),
             ),
-            SizedBox(height: 16.0),
-            Center(
-              child: Text(
-                'Duggirala Satyaprasad',
-                style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
-              ),
-            ),
-            SizedBox(height: 32.0),
-            Text('Sync'),
-            SizedBox(height: 32.0),
-            Text('UID No-'),
-            SizedBox(height: 16.0),
-            Text('Logout'),
-          ],
-        ),
+            title: Text('${members[index]}'),
+            subtitle: Text('Bolarum (ARSA)'),
+          );
+        },
       ),
     );
   }
