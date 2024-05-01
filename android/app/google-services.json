@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "256929510687",
+    "project_id": "sncapp-38380",
+    "storage_bucket": "sncapp-38380.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:256929510687:android:0a3ca87925f3cac39f2c2a",
+        "android_client_info": {
+          "package_name": "com.example.sncapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAYi4-K5Bn_Kir9n4f_LGZd5QAlFrD73TA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
