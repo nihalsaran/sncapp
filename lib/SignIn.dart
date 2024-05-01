@@ -76,6 +76,7 @@ class _SignInScreenState extends State<SignInScreen> {
       body: Center(
         child: Container(
           padding: EdgeInsets.all(16.0),
+          margin: EdgeInsets.all(32.0),
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(8.0),
