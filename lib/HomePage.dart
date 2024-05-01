@@ -223,59 +223,112 @@ class _GroupsScreenState extends State<GroupsScreen> {
         ),
       ),
       body: ListView.builder(
-        itemCount: groups.length,
+        itemCount: groups.length + 1, // Add 1 for "Update Location"
         itemBuilder: (context, index) {
-          return ListTile(
-            title: Text(groups[index]),
-            trailing: Icon(Icons.download),
-            onTap: () {
-              // Handle navigation for each group
-              switch (index) {
-                case 0:
-                  // Navigation logic for MPG Activities
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => MPGActivitiesPage()),
+          if (index == 0) {
+            // Return the "Update Location" ListTile
+            return Container(
+              color: Color.fromRGBO(255, 68, 0, 1),
+              padding: EdgeInsets.symmetric(vertical: 1.0),
+              child: ListTile(
+                title: Center(
+                  child: Text(
+                    'Update Location',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                onTap: () {
+                  // Show dialog with selectable places
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text('Select Location'),
+                        content: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            _buildPlaceTile('Place 1', context),
+                            _buildPlaceTile('Place 2', context),
+                            _buildPlaceTile('Place 3', context),
+                          ],
+                        ),
+                      );
+                    },
                   );
-                  break;
-                case 1:
-                  // Navigation logic for Sant (Su)perman Activities
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => SantSupermanActivitiesPage()),
-                  );
-                  break;
-                case 2:
-                  // Navigation logic for Sant(Su)perman Activities (MPG)
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => SantSupermanMPGActivitiesPage()),
-                  );
-                  break;
-                case 3:
-                  // Navigation logic for Satsang
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => SatsangPage()),
-                  );
-                  break;
-                case 4:
-                  // Navigation logic for Youth Association Activities
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => YouthAssociationActivitiesPage()),
-                  );
-                  break;
-                default:
-              }
-            },
-          );
+                },
+              ),
+            );
+          } else {
+            // Return ListTile for each group
+            return ListTile(
+              title: Text(groups[index - 1]),
+              trailing: Icon(Icons.download),
+              onTap: () {
+                // Handle navigation for each group
+                switch (index - 1) {
+                  case 0:
+                    // Navigation logic for MPG Activities
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => MPGActivitiesPage()),
+                    );
+                    break;
+                  case 1:
+                    // Navigation logic for Sant (Su)perman Activities
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => SantSupermanActivitiesPage()),
+                    );
+                    break;
+                  case 2:
+                    // Navigation logic for Sant(Su)perman Activities (MPG)
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              SantSupermanMPGActivitiesPage()),
+                    );
+                    break;
+                  case 3:
+                    // Navigation logic for Satsang
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => SatsangPage()),
+                    );
+                    break;
+                  case 4:
+                    // Navigation logic for Youth Association Activities
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              YouthAssociationActivitiesPage()),
+                    );
+                    break;
+                  default:
+                }
+              },
+            );
+          }
         },
       ),
+    );
+  }
+
+  // Function to build a ListTile for each place
+  Widget _buildPlaceTile(String placeName, BuildContext context) {
+    return ListTile(
+      title: Text(placeName),
+      onTap: () {
+        // Handle tap on each place
+        Navigator.pop(context); // Close the dialog
+        // Add logic to handle selection of each place
+      },
     );
   }
 }
