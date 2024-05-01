@@ -104,7 +104,12 @@ class _GroupsScreenState extends State<GroupsScreen> {
                 setState(() {
                   _selectedIndex = 1;
                 });
-                // Add navigation logic here
+                Navigator.pop(context); // Close the drawer
+                Navigator.push(
+                  // Navigate to SettingsPage
+                  context,
+                  MaterialPageRoute(builder: (context) => SettingsPage()),
+                );
               },
             ),
             ListTile(
@@ -120,7 +125,12 @@ class _GroupsScreenState extends State<GroupsScreen> {
                 setState(() {
                   _selectedIndex = 2;
                 });
-                // Add navigation logic here
+                Navigator.pop(context); // Close the drawer
+                Navigator.push(
+                  // Navigate to SettingsPage
+                  context,
+                  MaterialPageRoute(builder: (context) => SettingsPage()),
+                );
               },
             ),
             ListTile(
@@ -136,7 +146,12 @@ class _GroupsScreenState extends State<GroupsScreen> {
                 setState(() {
                   _selectedIndex = 3;
                 });
-                // Add navigation logic here
+                Navigator.pop(context); // Close the drawer
+                Navigator.push(
+                  // Navigate to SettingsPage
+                  context,
+                  MaterialPageRoute(builder: (context) => SettingsPage()),
+                );
               },
             ),
             ListTile(
@@ -152,7 +167,12 @@ class _GroupsScreenState extends State<GroupsScreen> {
                 setState(() {
                   _selectedIndex = 4;
                 });
-                // Add navigation logic here
+                Navigator.pop(context); // Close the drawer
+                Navigator.push(
+                  // Navigate to SettingsPage
+                  context,
+                  MaterialPageRoute(builder: (context) => SettingsPage()),
+                );
               },
             ),
             ListTile(
@@ -168,7 +188,12 @@ class _GroupsScreenState extends State<GroupsScreen> {
                 setState(() {
                   _selectedIndex = 5;
                 });
-                // Add navigation logic here
+                Navigator.pop(context); // Close the drawer
+                Navigator.push(
+                  // Navigate to SettingsPage
+                  context,
+                  MaterialPageRoute(builder: (context) => SettingsPage()),
+                );
               },
             ),
             ListTile(
@@ -184,7 +209,12 @@ class _GroupsScreenState extends State<GroupsScreen> {
                 setState(() {
                   _selectedIndex = 6;
                 });
-                // Add navigation logic here
+                Navigator.pop(context); // Close the drawer
+                Navigator.push(
+                  // Navigate to SettingsPage
+                  context,
+                  MaterialPageRoute(builder: (context) => SettingsPage()),
+                );
               },
             ),
             // Add a Divider after Settings
