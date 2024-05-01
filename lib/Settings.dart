@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:sncapp/Sidedrawer.dart';
 
 void main() {
   runApp(SettingsPage());
@@ -27,20 +26,10 @@ class SettingsScreen extends StatefulWidget {
 
 class _SettingsScreenState extends State<SettingsScreen> {
   bool useInternet = false;
-  int _selectedIndex = 0;
-  
-  // Create a GlobalKey for the Scaffold
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-
-  // Function to toggle the drawer
-  void _toggleDrawer() {
-    _scaffoldKey.currentState?.openDrawer(); // Use null-aware operator
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: _scaffoldKey, // Assign the GlobalKey to the Scaffold
       appBar: AppBar(
         title: Text(
           'Settings',
@@ -49,17 +38,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
         backgroundColor: Colors.green,
         leading: IconButton(
           icon: Icon(Icons.menu, color: Colors.white), // Add menu icon
-          onPressed: _toggleDrawer, // Call _toggleDrawer when icon is pressed
+          onPressed: () {
+            // Add your menu functionality here
+          },
         ),
-      ),
-      drawer: CustomDrawer(
-        context: context,
-        selectedIndex: _selectedIndex,
-        onItemSelected: (index) {
-          setState(() {
-            _selectedIndex = index;
-          });
-        },
       ),
       body: Padding(
         padding: EdgeInsets.all(16.0),
