@@ -2,12 +2,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:sncapp/firebase_options.dart';
+import 'package:sncapp/HomePage.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
-   options: DefaultFirebaseOptions.currentPlatform,
- );
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(MyApp(key: UniqueKey()));
 }
 
@@ -17,6 +18,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'SNC Haazri',
       theme: ThemeData(
         primaryColor: Colors.green,
@@ -41,27 +43,31 @@ class _SignInScreenState extends State<SignInScreen> {
   String _errorText = '';
 
   Future<void> _signInWithEmailAndPassword() async {
-  try {
-    UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
-      email: _emailController.text,
-      password: _passwordController.text,
-    );
-    // Handle successful sign-in
-    print('User signed in: ${userCredential.user!.email}');
-    
-    // Navigate to the homepage
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => HomePage()), // Replace HomePage with your actual homepage widget
-    );
-  } catch (e) {
-    // Handle sign-in errors
-    setState(() {
-      _errorText = 'Sign-in failed. Please check your credentials and try again.';
-    });
-    print('Sign-in error: $e');
+    try {
+      UserCredential userCredential =
+          await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: _emailController.text,
+        password: _passwordController.text,
+      );
+      // Handle successful sign-in
+      print('User signed in: ${userCredential.user!.email}');
+
+      // Navigate to the homepage
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+            builder: (context) =>
+                HomePage()), // Replace HomePage with your actual homepage widget
+      );
+    } catch (e) {
+      // Handle sign-in errors
+      setState(() {
+        _errorText =
+            'Sign-in failed. Please check your credentials and try again.';
+      });
+      print('Sign-in error: $e');
+    }
   }
-}
 
   @override
   Widget build(BuildContext context) {
@@ -107,7 +113,8 @@ class _SignInScreenState extends State<SignInScreen> {
                   onPressed: _signInWithEmailAndPassword,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.green, // Updated parameter name
-                    padding: EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0),
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0),
                   ),
                   child: Text(
                     'SIGN IN',
