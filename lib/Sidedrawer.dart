@@ -69,6 +69,10 @@ class CustomDrawer extends StatelessWidget {
             icon: Icons.settings,
             title: 'Settings',
             index: 6,
+            onTap: () {
+              // Navigate to settings page
+              Navigator.pushNamed(context, '/settings');
+            },
           ),
           Divider(
             color: Colors.grey,
@@ -97,6 +101,7 @@ class CustomDrawer extends StatelessWidget {
     required IconData icon,
     required String title,
     required int index,
+    Function()? onTap, // Add onTap function
   }) {
     return ListTile(
       leading: Icon(
@@ -110,10 +115,12 @@ class CustomDrawer extends StatelessWidget {
           fontWeight: FontWeight.bold,
         ),
       ),
-      onTap: () {
-        onItemSelected(index);
-        Navigator.pop(context); // Use the context passed from the constructor
-      },
+      onTap: onTap != null
+          ? onTap
+          : () {
+              onItemSelected(index);
+              Navigator.pop(context); // Use the context passed from the constructor
+            },
     );
   }
 }

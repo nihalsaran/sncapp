@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:sncapp/Sidedrawer.dart';
 
 void main() {
   runApp(SettingsPage());
@@ -27,6 +28,8 @@ class SettingsScreen extends StatefulWidget {
 class _SettingsScreenState extends State<SettingsScreen> {
   bool useInternet = false;
 
+  int _selectedIndex = 0;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,9 +42,20 @@ class _SettingsScreenState extends State<SettingsScreen> {
         leading: IconButton(
           icon: Icon(Icons.menu, color: Colors.white), // Add menu icon
           onPressed: () {
-            // Add your menu functionality here
+           
           },
         ),
+      ),
+      drawer: CustomDrawer( // Pass the context here
+        context: context,
+        selectedIndex: _selectedIndex,
+        onItemSelected: (index) {
+          setState(() {
+            _selectedIndex = index;
+          });
+          // Handle navigation here based on the index
+          // For now, let's leave it empty
+        },
       ),
       body: Padding(
         padding: EdgeInsets.all(16.0),

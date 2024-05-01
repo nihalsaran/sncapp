@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sncapp/Satsang.dart';
 import 'package:sncapp/Sidedrawer.dart';
+import 'package:sncapp/Settings.dart';
 
 void main() {
   runApp(HomePage());
@@ -13,6 +14,9 @@ class HomePage extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Your Groups',
       home: GroupsScreen(),
+       routes: {
+    '/settings': (context) => SettingsPage(), // Replace SettingsPage with your actual settings page widget
+  },
     );
   }
 }
