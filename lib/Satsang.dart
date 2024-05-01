@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'HomePage.dart'; // Import the HomePage.dart file
 
 void main() {
-  runApp(MyApp());
+  runApp(SatsangPage());
 }
 
-class MyApp extends StatelessWidget {
+class SatsangPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
