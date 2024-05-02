@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sncapp/HomePage.dart';
+import 'package:sncapp/MemberList.dart';
 
 void main() {
   runApp(SettingsPage());
@@ -105,7 +106,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 Navigator.push(
                   // Navigate to SettingsPage
                   context,
-                  MaterialPageRoute(builder: (context) => SettingsPage()),
+                  MaterialPageRoute(builder: (context) => MemberList()),
                 );
               },
             ),

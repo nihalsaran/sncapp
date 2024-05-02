@@ -56,6 +56,17 @@ class _MembersListScreenState extends State<MembersListScreen> {
           style: TextStyle(color: Colors.white),
         ),
         backgroundColor: Colors.green,
+        leading: Builder(
+          builder: (context) => IconButton(
+            icon: Icon(
+              Icons.menu,
+              color: Colors.white,
+            ),
+            onPressed: () {
+              Scaffold.of(context).openDrawer();
+            },
+          ),
+        ),
         actions: [
           IconButton(
             icon: Icon(
