@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'HomePage.dart'; // Import the HomePage.dart file
+import 'HomePage.dart';
+import 'package:sncapp/DailyMorningSatsang/Members.dart'; // Import the MembersPage.dart file
 
 void main() {
   runApp(SatsangPage());
@@ -81,13 +82,21 @@ class _SatsangScreenState extends State<SatsangScreen> {
             ),
             ListTile(
               title: Text('Daily Morning Satsang'),
-              trailing:
-                  Icon(Icons.arrow_drop_down), // Add icon to the right corner
+              trailing: Icon(Icons.arrow_drop_down),
+              onTap: () {
+                // Navigate to MembersPage.dart
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => MembersPage()),
+                );
+              },
             ),
             ListTile(
               title: Text('Daily Evening Satsang'),
-              trailing:
-                  Icon(Icons.arrow_drop_down), // Add icon to the right corner
+              trailing: Icon(Icons.arrow_drop_down),
+              onTap: () {
+                // Handle onTap for Daily Evening Satsang
+              },
             ),
           ],
         ),

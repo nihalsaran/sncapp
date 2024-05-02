@@ -15,6 +15,7 @@ class _MemberListState extends State<MemberList> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Members List',
       theme: ThemeData(
         primarySwatch: Colors.green,
@@ -56,6 +57,17 @@ class _MembersListScreenState extends State<MembersListScreen> {
           style: TextStyle(color: Colors.white),
         ),
         backgroundColor: Colors.green,
+        leading: Builder(
+          builder: (context) => IconButton(
+            icon: Icon(
+              Icons.menu,
+              color: Colors.white,
+            ),
+            onPressed: () {
+              Scaffold.of(context).openDrawer();
+            },
+          ),
+        ),
         actions: [
           IconButton(
             icon: Icon(
