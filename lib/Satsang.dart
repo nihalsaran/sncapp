@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'HomePage.dart';
-import 'package:sncapp/DailyMorningSatsang/Members.dart'; // Import the MembersPage.dart file
+import 'package:sncapp/DailyMorningSatsang/Dailymor.dart'; // Import the MembersPage.dart file
 
 void main() {
   runApp(SatsangPage());
@@ -87,7 +87,7 @@ class _SatsangScreenState extends State<SatsangScreen> {
                 // Navigate to MembersPage.dart
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => MembersPage()),
+                  MaterialPageRoute(builder: (context) => Dailymorning()),
                 );
               },
             ),
