@@ -15,6 +15,7 @@ class _MemberListState extends State<MemberList> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Members List',
       theme: ThemeData(
         primarySwatch: Colors.green,
