@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:sncapp/HomePage.dart';
 import 'package:sncapp/Settings.dart';
 
-void main() {
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(MemberList());
 }
 
@@ -31,22 +36,14 @@ class MembersListScreen extends StatefulWidget {
 }
 
 class _MembersListScreenState extends State<MembersListScreen> {
-  final List<String> members = [
-    'Vadapalli Kamal Prakash',
-    'S Asha',
-    'Sirisha Garlapad',
-    'Rachana Garlapad',
-    'Grandhi Svam Sravya',
-    'Beerum Raghavendra Rao',
-    'Bhumi Reddy madhu sudan Reddy',
-    'Munaganooru Charana kumari',
-    'Tontanahal Swarup',
-    'Tantanahal Chandramouli',
-    'Tontanahal Dhana Shekhar',
-    'Tontanahal Guru charan',
-  ];
-
+  late Stream<QuerySnapshot> _membersStream;
   int _selectedIndex = 1;
+
+  @override
+  void initState() {
+    super.initState();
+    _membersStream = FirebaseFirestore.instance.collection('BranchData').snapshots();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -130,7 +127,7 @@ class _MembersListScreenState extends State<MembersListScreen> {
                 });
                 Navigator.pop(context); // Close the drawer
                 Navigator.push(
-                  // Navigate to SettingsPage
+                  // Navigate to HomePage
                   context,
                   MaterialPageRoute(builder: (context) => HomePage()),
                 );
@@ -150,11 +147,7 @@ class _MembersListScreenState extends State<MembersListScreen> {
                   _selectedIndex = 1;
                 });
                 Navigator.pop(context); // Close the drawer
-                Navigator.push(
-                  // Navigate to SettingsPage
-                  context,
-                  MaterialPageRoute(builder: (context) => MemberList()),
-                );
+                // Already on the MemberList page
               },
             ),
             ListTile(
@@ -298,18 +291,34 @@ class _MembersListScreenState extends State<MembersListScreen> {
           ],
         ),
       ),
-      body: ListView.builder(
-        itemCount: members.length,
+      body: StreamBuilder<QuerySnapshot>(
+  stream: _membersStream,
+  builder: (context, snapshot) {
+    if (snapshot.connectionState == ConnectionState.waiting) {
+      return Center(child: CircularProgressIndicator());
+    } else if (snapshot.hasError) {
+      return Center(child: Text('Error: ${snapshot.error}'));
+    } else {
+      return ListView.builder(
+        itemCount: snapshot.data!.docs.length,
         itemBuilder: (context, index) {
+          final Map<String, dynamic> memberData = snapshot.data!.docs[index].data() as Map<String, dynamic>;
+          final String firstName = memberData['firstName'] ?? '';
+          final String middleName = memberData['middleName'] ?? '';
+          final String lastName = memberData['lastName'] ?? '';
+
           return ListTile(
             leading: CircleAvatar(
               child: Icon(Icons.person),
             ),
-            title: Text('${members[index]}'),
+            title: Text('$firstName $middleName $lastName'),
             subtitle: Text('Bolarum (ARSA)'),
           );
         },
-      ),
+      );
+    }
+  },
+),
     );
   }
 }

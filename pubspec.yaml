@@ -11,6 +11,7 @@ dependencies:
   firebase_auth: ^4.19.4
   flutter:
     sdk: flutter
+  cloud_firestore: ^4.17.2
 
 dev_dependencies:
   flutter_test:
