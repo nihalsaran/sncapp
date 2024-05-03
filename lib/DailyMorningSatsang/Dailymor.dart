@@ -5,29 +5,34 @@ import 'package:sncapp/DailyMorningSatsang/visitors.dart';
 import 'package:sncapp/DailyMorningSatsang/guests.dart';
 
 void main() {
-  runApp(Dailymorning());
+  runApp(Dailymorning(documentId: "Default Document Id"));
 }
 
 class Dailymorning extends StatefulWidget {
-  
+  final String documentId;
+
+  Dailymorning({required this.documentId});
+
   @override
   _DailymorningState createState() => _DailymorningState();
 }
 
-class _DailymorningState extends State<Dailymorning> with SingleTickerProviderStateMixin {
+class _DailymorningState extends State<Dailymorning>
+    with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 4, vsync: this); // Increased length to 4
+    _tabController =
+        TabController(length: 4, vsync: this); // Increased length to 4
   }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Daily Morning Satsang',
+      title: '${widget.documentId}',
       home: Scaffold(
         appBar: AppBar(
           leading: IconButton(
@@ -37,7 +42,7 @@ class _DailymorningState extends State<Dailymorning> with SingleTickerProviderSt
             },
           ),
           title: Text(
-            'Daily Morning Satsang',
+            '${widget.documentId}',
             style: TextStyle(color: Colors.white),
           ),
           backgroundColor: Colors.green,

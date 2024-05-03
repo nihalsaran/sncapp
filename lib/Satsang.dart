@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'HomePage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart'; // Import Firestore package
+import 'package:sncapp/DailyMorningSatsang/Dailymor.dart'; // Import Dailymorning class
 
 void main() {
   runApp(SatsangPage(groupName: "Default Group Name"));
@@ -95,12 +96,12 @@ class _SatsangScreenState extends State<SatsangScreen> {
                     title: Text(document.id),
                     // Handle onTap for each document
                     onTap: () {
-                      // Example: Navigate to a detail screen passing the document id
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => DetailScreen(documentId: document.id)),
-                      );
-                    },
+  Navigator.push(
+    context,
+    MaterialPageRoute(builder: (context) => Dailymorning(documentId: document.id)), // Pass documentId parameter
+  );
+},
+
                   );
                 }).toList(),
               ),
