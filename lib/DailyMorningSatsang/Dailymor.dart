@@ -5,13 +5,14 @@ import 'package:sncapp/DailyMorningSatsang/visitors.dart';
 import 'package:sncapp/DailyMorningSatsang/guests.dart';
 
 void main() {
-  runApp(Dailymorning(documentId: "Default Document Id"));
+  runApp(Dailymorning(documentId: "Default Document Id", groupName: "Default Group Name"));
 }
 
 class Dailymorning extends StatefulWidget {
   final String documentId;
+   final String groupName;
 
-  Dailymorning({required this.documentId});
+  Dailymorning({required this.documentId, required this.groupName});
 
   @override
   _DailymorningState createState() => _DailymorningState();
@@ -61,7 +62,7 @@ class _DailymorningState extends State<Dailymorning>
           controller: _tabController,
           children: [
             Page1(),
-            Page2(),
+            Page2(documentId: widget.documentId, groupName: widget.groupName), // Pass documentId to Page2
             Page3(),
             Page4(),
           ],

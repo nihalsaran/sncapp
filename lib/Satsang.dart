@@ -20,7 +20,8 @@ class SatsangPage extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.green,
       ),
-      home: SatsangScreen(groupName: groupName), // Pass groupName to SatsangScreen
+      home: SatsangScreen(
+          groupName: groupName), // Pass groupName to SatsangScreen
     );
   }
 }
@@ -58,7 +59,11 @@ class _SatsangScreenState extends State<SatsangScreen> {
         backgroundColor: Colors.green,
       ),
       body: StreamBuilder(
-        stream: FirebaseFirestore.instance.collection('Groups').doc(widget.groupName).collection(widget.groupName).snapshots(),
+        stream: FirebaseFirestore.instance
+            .collection('Groups')
+            .doc(widget.groupName)
+            .collection(widget.groupName)
+            .snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (!snapshot.hasData) {
             return CircularProgressIndicator(); // Show loading indicator while fetching data
@@ -96,12 +101,15 @@ class _SatsangScreenState extends State<SatsangScreen> {
                     title: Text(document.id),
                     // Handle onTap for each document
                     onTap: () {
-  Navigator.push(
-    context,
-    MaterialPageRoute(builder: (context) => Dailymorning(documentId: document.id)), // Pass documentId parameter
-  );
-},
-
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => Dailymorning(
+                                  documentId: document.id,
+                                   groupName: widget.groupName,
+                                )), // Pass documentId parameter
+                      );
+                    },
                   );
                 }).toList(),
               ),
@@ -153,24 +161,5 @@ class _SatsangScreenState extends State<SatsangScreen> {
         selectedDate = picked;
       });
     }
-  }
-}
-
-class DetailScreen extends StatelessWidget {
-  final String documentId;
-
-  DetailScreen({required this.documentId});
-
-  @override
-  Widget build(BuildContext context) {
-    // Implement your detail screen here, using the documentId to fetch additional data if needed
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Document Details'),
-      ),
-      body: Center(
-        child: Text('Details for document: $documentId'),
-      ),
-    );
   }
 }
