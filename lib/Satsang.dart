@@ -1,26 +1,34 @@
 import 'package:flutter/material.dart';
 import 'HomePage.dart';
-import 'package:sncapp/DailyMorningSatsang/Dailymor.dart'; // Import the MembersPage.dart file
+import 'package:cloud_firestore/cloud_firestore.dart'; // Import Firestore package
 
 void main() {
-  runApp(SatsangPage());
+  runApp(SatsangPage(groupName: "Default Group Name"));
 }
 
 class SatsangPage extends StatelessWidget {
+  final String groupName;
+
+  SatsangPage({required this.groupName});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Satsang',
+      title: groupName, // Set the title to the groupName
       theme: ThemeData(
         primarySwatch: Colors.green,
       ),
-      home: SatsangScreen(),
+      home: SatsangScreen(groupName: groupName), // Pass groupName to SatsangScreen
     );
   }
 }
 
 class SatsangScreen extends StatefulWidget {
+  final String groupName;
+
+  SatsangScreen({required this.groupName});
+
   @override
   _SatsangScreenState createState() => _SatsangScreenState();
 }
@@ -37,69 +45,68 @@ class _SatsangScreenState extends State<SatsangScreen> {
           onPressed: () {
             Navigator.of(context).pushReplacement(
               MaterialPageRoute(
-                  builder: (context) =>
-                      HomePage()), // Navigate to HomePage.dart
+                builder: (context) => HomePage(),
+              ),
             );
           },
         ),
         title: Text(
-          'Satsang',
+          widget.groupName, // Use groupName in the title
           style: TextStyle(color: Colors.white),
         ),
         backgroundColor: Colors.green,
       ),
-      body: Theme(
-        data: ThemeData(
-          colorScheme: ColorScheme.fromSwatch().copyWith(
-            primary: Color.fromRGBO(
-                255, 68, 0, 1), // set the color for the date picker
-          ),
-        ),
-        child: Column(
-          children: [
-            Container(
-              color: Color.fromRGBO(255, 68, 0, 1),
-              padding: EdgeInsets.symmetric(vertical: 8.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    '${selectedDate.day} ${_getMonthName(selectedDate.month)} ${selectedDate.year}',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 18.0,
+      body: StreamBuilder(
+        stream: FirebaseFirestore.instance.collection('Groups').doc(widget.groupName).collection(widget.groupName).snapshots(),
+        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          if (!snapshot.hasData) {
+            return CircularProgressIndicator(); // Show loading indicator while fetching data
+          }
+          return Column(
+            children: [
+              Container(
+                color: Color.fromRGBO(255, 68, 0, 1),
+                padding: EdgeInsets.symmetric(vertical: 8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      '${selectedDate.day} ${_getMonthName(selectedDate.month)} ${selectedDate.year}',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 18.0,
+                      ),
                     ),
-                  ),
-                  SizedBox(width: 8.0),
-                  IconButton(
-                    icon: Icon(Icons.calendar_today, color: Colors.white),
-                    onPressed: () {
-                      _selectDate(context);
-                    },
-                  ),
-                ],
+                    SizedBox(width: 8.0),
+                    IconButton(
+                      icon: Icon(Icons.calendar_today, color: Colors.white),
+                      onPressed: () {
+                        _selectDate(context);
+                      },
+                    ),
+                  ],
+                ),
               ),
-            ),
-            ListTile(
-              title: Text('Daily Morning Satsang'),
-              trailing: Icon(Icons.arrow_drop_down),
-              onTap: () {
-                // Navigate to MembersPage.dart
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => Dailymorning()),
-                );
-              },
-            ),
-            ListTile(
-              title: Text('Daily Evening Satsang'),
-              trailing: Icon(Icons.arrow_drop_down),
-              onTap: () {
-                // Handle onTap for Daily Evening Satsang
-              },
-            ),
-          ],
-        ),
+              // Display document names
+              ListView(
+                shrinkWrap: true,
+                children: snapshot.data!.docs.map((DocumentSnapshot document) {
+                  return ListTile(
+                    title: Text(document.id),
+                    // Handle onTap for each document
+                    onTap: () {
+                      // Example: Navigate to a detail screen passing the document id
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => DetailScreen(documentId: document.id)),
+                      );
+                    },
+                  );
+                }).toList(),
+              ),
+            ],
+          );
+        },
       ),
     );
   }
@@ -145,5 +152,24 @@ class _SatsangScreenState extends State<SatsangScreen> {
         selectedDate = picked;
       });
     }
+  }
+}
+
+class DetailScreen extends StatelessWidget {
+  final String documentId;
+
+  DetailScreen({required this.documentId});
+
+  @override
+  Widget build(BuildContext context) {
+    // Implement your detail screen here, using the documentId to fetch additional data if needed
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Document Details'),
+      ),
+      body: Center(
+        child: Text('Details for document: $documentId'),
+      ),
+    );
   }
 }

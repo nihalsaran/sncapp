@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart'; // Import Firestore
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:sncapp/MemberList.dart';
+import 'package:sncapp/Satsang.dart';
+import 'package:sncapp/Settings.dart';
 
 void main() {
   runApp(HomePage());
@@ -23,21 +25,20 @@ class GroupsScreen extends StatefulWidget {
 }
 
 class _GroupsScreenState extends State<GroupsScreen> {
-  List<String> groups = []; // Updated to fetch from Firestore
+  List<String> groups = [];
   int _selectedIndex = 0;
 
   @override
   void initState() {
     super.initState();
-    fetchGroups(); // Call the method to fetch groups when the screen initializes
+    fetchGroups();
   }
 
   Future<void> fetchGroups() async {
     try {
-      // Fetch groups from Firestore
-      QuerySnapshot<Map<String, dynamic>> querySnapshot = await FirebaseFirestore.instance.collection('Groups').get();
-      
-      // Extract document names and update the groups list
+      QuerySnapshot<Map<String, dynamic>> querySnapshot =
+          await FirebaseFirestore.instance.collection('Groups').get();
+
       List<String> fetchedGroups = [];
       querySnapshot.docs.forEach((doc) {
         fetchedGroups.add(doc.id);
@@ -48,7 +49,6 @@ class _GroupsScreenState extends State<GroupsScreen> {
       });
     } catch (e) {
       print("Error fetching groups: $e");
-      // Handle error appropriately, like showing a message to the user
     }
   }
 
@@ -126,21 +126,156 @@ class _GroupsScreenState extends State<GroupsScreen> {
                 });
                 Navigator.pop(context); // Close the drawer
                 Navigator.push(
-                  // Navigate to MemberListPage
+                  // Navigate to SettingsPage
                   context,
                   MaterialPageRoute(builder: (context) => MemberList()),
                 );
               },
             ),
-            // Other list tiles remain the same
+            ListTile(
+              leading: Icon(Icons.list_alt,
+                  color: _selectedIndex == 2 ? Colors.green : null),
+              title: Text(
+                'Local Attendance',
+                style: TextStyle(
+                    color: _selectedIndex == 2 ? Colors.green : null,
+                    fontWeight: FontWeight.bold),
+              ),
+              onTap: () {
+                setState(() {
+                  _selectedIndex = 2;
+                });
+                Navigator.pop(context); // Close the drawer
+                Navigator.push(
+                  // Navigate to SettingsPage
+                  context,
+                  MaterialPageRoute(builder: (context) => SettingsPage()),
+                );
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.list_alt,
+                  color: _selectedIndex == 3 ? Colors.green : null),
+              title: Text(
+                "Today's Attendance Split",
+                style: TextStyle(
+                    color: _selectedIndex == 3 ? Colors.green : null,
+                    fontWeight: FontWeight.bold),
+              ),
+              onTap: () {
+                setState(() {
+                  _selectedIndex = 3;
+                });
+                Navigator.pop(context); // Close the drawer
+                Navigator.push(
+                  // Navigate to SettingsPage
+                  context,
+                  MaterialPageRoute(builder: (context) => SettingsPage()),
+                );
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.group,
+                  color: _selectedIndex == 4 ? Colors.green : null),
+              title: Text(
+                'Visitor Management',
+                style: TextStyle(
+                    color: _selectedIndex == 4 ? Colors.green : null,
+                    fontWeight: FontWeight.bold),
+              ),
+              onTap: () {
+                setState(() {
+                  _selectedIndex = 4;
+                });
+                Navigator.pop(context); // Close the drawer
+                Navigator.push(
+                  // Navigate to SettingsPage
+                  context,
+                  MaterialPageRoute(builder: (context) => SettingsPage()),
+                );
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.web,
+                  color: _selectedIndex == 5 ? Colors.green : null),
+              title: Text(
+                'Hazari Web',
+                style: TextStyle(
+                    color: _selectedIndex == 5 ? Colors.green : null,
+                    fontWeight: FontWeight.bold),
+              ),
+              onTap: () {
+                setState(() {
+                  _selectedIndex = 5;
+                });
+                Navigator.pop(context); // Close the drawer
+                Navigator.push(
+                  // Navigate to SettingsPage
+                  context,
+                  MaterialPageRoute(builder: (context) => SettingsPage()),
+                );
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.settings,
+                  color: _selectedIndex == 6 ? Colors.green : null),
+              title: Text(
+                'Settings',
+                style: TextStyle(
+                    color: _selectedIndex == 6 ? Colors.green : null,
+                    fontWeight: FontWeight.bold),
+              ),
+              onTap: () {
+                setState(() {
+                  _selectedIndex = 6;
+                });
+                Navigator.pop(context); // Close the drawer
+                Navigator.push(
+                  // Navigate to SettingsPage
+                  context,
+                  MaterialPageRoute(builder: (context) => SettingsPage()),
+                );
+              },
+            ),
+            // Add a Divider after Settings
+            Divider(
+              color: Colors.grey,
+            ),
+            // Add Assistance title
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+              child: Text(
+                'Assistance',
+                style: TextStyle(
+                  color: Colors.grey[600],
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            // Add Tutorials list item
+            ListTile(
+              leading: Icon(Icons.menu_book,
+                  color: _selectedIndex == 7 ? Colors.green : null),
+              title: Text(
+                'Tutorials',
+                style: TextStyle(
+                    color: _selectedIndex == 7 ? Colors.green : null,
+                    fontWeight: FontWeight.bold),
+              ),
+              onTap: () {
+                setState(() {
+                  _selectedIndex = 7;
+                });
+                // Add navigation logic here
+              },
+            ),
           ],
         ),
       ),
       body: ListView.builder(
-        itemCount: groups.length + 1, // Add 1 for "Update Location"
+        itemCount: groups.length + 1,
         itemBuilder: (context, index) {
           if (index == 0) {
-            // Return the "Update Location" ListTile
             return Container(
               color: Color.fromRGBO(255, 68, 0, 1),
               padding: EdgeInsets.symmetric(vertical: 1.0),
@@ -155,7 +290,6 @@ class _GroupsScreenState extends State<GroupsScreen> {
                   ),
                 ),
                 onTap: () {
-                  // Show dialog with selectable places
                   showDialog(
                     context: context,
                     builder: (BuildContext context) {
@@ -164,9 +298,9 @@ class _GroupsScreenState extends State<GroupsScreen> {
                         content: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            _buildPlaceTile('Place 1', context),
-                            _buildPlaceTile('Place 2', context),
-                            _buildPlaceTile('Place 3', context),
+                            _buildPlaceTile('Place 1', context, 0),
+                            _buildPlaceTile('Place 2', context, 1),
+                            _buildPlaceTile('Place 3', context, 2),
                           ],
                         ),
                       );
@@ -176,13 +310,18 @@ class _GroupsScreenState extends State<GroupsScreen> {
               ),
             );
           } else {
-            // Return ListTile for each group
             return ListTile(
               title: Text(groups[index - 1]),
               trailing: Icon(Icons.download),
               onTap: () {
-                // Handle navigation for each group
-                // Navigation logic remains the same
+                // Debug statement to check if onTap is triggered
+                print("Tapped on group: ${groups[index - 1]}");
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => SatsangPage(groupName: groups[index - 1]),
+                  ),
+                );
               },
             );
           }
@@ -191,72 +330,18 @@ class _GroupsScreenState extends State<GroupsScreen> {
     );
   }
 
-  // Function to build a ListTile for each place
-  Widget _buildPlaceTile(String placeName, BuildContext context) {
+  Widget _buildPlaceTile(String placeName, BuildContext context, int index) {
     return ListTile(
       title: Text(placeName),
       onTap: () {
-        // Handle tap on each place
-        Navigator.pop(context); // Close the dialog
-        // Add logic to handle selection of each place
+        print("Tapped on tile at index $index");
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => SatsangPage(groupName: groups[index]),
+          ),
+        );
       },
-    );
-  }
-}
-
-// Define other pages here
-class MPGActivitiesPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('MPG Activities'),
-      ),
-      body: Center(
-        child: Text('This is the MPG Activities Page'),
-      ),
-    );
-  }
-}
-
-class SantSupermanActivitiesPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Sant (Su)perman Activities'),
-      ),
-      body: Center(
-        child: Text('This is the Sant (Su)perman Activities Page'),
-      ),
-    );
-  }
-}
-
-class SantSupermanMPGActivitiesPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Sant(Su)perman Activities (MPG)'),
-      ),
-      body: Center(
-        child: Text('This is the Sant(Su)perman Activities (MPG) Page'),
-      ),
-    );
-  }
-}
-
-class YouthAssociationActivitiesPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Youth Association Activities'),
-      ),
-      body: Center(
-        child: Text('This is the Youth Association Activities Page'),
-      ),
     );
   }
 }
