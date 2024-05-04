@@ -1,104 +1,56 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:sncapp/HomePage.dart';
-import 'package:sncapp/AttandanceSplit.dart';
-import 'package:sncapp/LocalAttandance.dart';
+import 'package:sncapp/MemberList.dart';
 import 'package:sncapp/Settings.dart';
+import 'package:sncapp/LocalAttandance.dart';
+import 'package:sncapp/HomePage.dart';
 
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
-  runApp(MemberList());
+void main() {
+  runApp(AttandanceSplitPage());
 }
 
-class MemberList extends StatefulWidget {
-  @override
-  State<MemberList> createState() => _MemberListState();
-}
-
-class _MemberListState extends State<MemberList> {
+class AttandanceSplitPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Members List',
+      title: 'Attendance Split',
       theme: ThemeData(
         primarySwatch: Colors.green,
       ),
-      home: MembersListScreen(),
+      home: AttendanceSplitScreen(),
     );
   }
 }
 
-class MembersListScreen extends StatefulWidget {
+class AttendanceSplitScreen extends StatefulWidget {
   @override
-  State<MembersListScreen> createState() => _MembersListScreenState();
+  State<AttendanceSplitScreen> createState() => _AttendanceSplitScreenState();
 }
 
-class _MembersListScreenState extends State<MembersListScreen> {
-  late Stream<QuerySnapshot> _membersStream =
-      Stream.empty(); // Provide a default value
-  int _selectedIndex = 1;
-  String? _userLocation; // Make _userLocation nullable
+class _AttendanceSplitScreenState extends State<AttendanceSplitScreen> {
+  final List<Map<String, dynamic>> attendanceData = [
+    {
+      'title': 'Daily Evening Satsang, Bokaro',
+      'data': [
+        {'particular': 'Initiated', 'male': 0, 'female': 1, 'total': 1},
+        {'particular': 'Jigyasu', 'male': 0, 'female': 0, 'total': 0},
+        {'particular': 'Preinitiates', 'male': 0, 'female': 0, 'total': 0},
+        {'particular': 'Santsu', 'male': 1, 'female': 1, 'total': 2},
+      ]
+    },
+    // Add other attendance data maps here
+  ];
 
-  @override
-  void initState() {
-    super.initState();
-    // Fetch current user's location from 'users' collection
-    fetchUserLocation().then((location) {
-      setState(() {
-        _userLocation = location;
-        // Update the stream to query 'BranchData' collection with user's location
-        if (_userLocation != null) {
-          _membersStream = FirebaseFirestore.instance
-              .collection('BranchData')
-              .doc(_userLocation!) // Match document ID with user's location
-              .collection('Satsangis')
-              .snapshots();
-        } else {
-          // Provide a default stream if user location is not available
-          _membersStream =
-              FirebaseFirestore.instance.collection('empty').snapshots();
-        }
-      });
-    });
-  }
-
-  Future<String?> fetchUserLocation() async {
-    String? userLocation;
-
-    try {
-      // Get the current user
-      User? user = FirebaseAuth.instance.currentUser;
-
-      if (user != null) {
-        // Get the user's document from Firestore
-        DocumentSnapshot userDoc = await FirebaseFirestore.instance
-            .collection('users')
-            .doc(user.uid) // Assuming the user ID is used as document ID
-            .get();
-
-        // Retrieve the location field from the user document
-        userLocation = userDoc.get('location');
-      }
-    } catch (error) {
-      print("Error fetching user's location: $error");
-    }
-
-    return userLocation;
-  }
-
+  int _selectedIndex = 3;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.green,
         title: Text(
-          'Members List',
+          'Attendance Split',
           style: TextStyle(color: Colors.white),
         ),
-        backgroundColor: Colors.green,
         leading: Builder(
           builder: (context) => IconButton(
             icon: Icon(
@@ -110,31 +62,6 @@ class _MembersListScreenState extends State<MembersListScreen> {
             },
           ),
         ),
-        actions: [
-          IconButton(
-            icon: Icon(
-              Icons.search,
-              color: Colors.white,
-            ),
-            onPressed: () {},
-          ),
-          IconButton(
-            icon: Icon(
-              Icons.replay,
-              color: Colors.white,
-            ),
-            onPressed: () {},
-          ),
-          IconButton(
-            icon: Icon(
-              Icons.more_vert,
-              color: Colors.white,
-            ),
-            onPressed: () {
-              // Add search functionality
-            },
-          ),
-        ],
       ),
       drawer: Drawer(
         child: ListView(
@@ -170,9 +97,10 @@ class _MembersListScreenState extends State<MembersListScreen> {
                 setState(() {
                   _selectedIndex = 0;
                 });
-                Navigator.pop(context); // Close the drawer
+                // Navigate to Home page
+                Navigator.pop(context);
                 Navigator.push(
-                  // Navigate to HomePage
+                  // Navigate to SettingsPage
                   context,
                   MaterialPageRoute(builder: (context) => HomePage()),
                 );
@@ -192,7 +120,11 @@ class _MembersListScreenState extends State<MembersListScreen> {
                   _selectedIndex = 1;
                 });
                 Navigator.pop(context); // Close the drawer
-                // Already on the MemberList page
+                Navigator.push(
+                  // Navigate to SettingsPage
+                  context,
+                  MaterialPageRoute(builder: (context) => MemberList()),
+                );
               },
             ),
             ListTile(
@@ -232,7 +164,6 @@ class _MembersListScreenState extends State<MembersListScreen> {
                 });
                 Navigator.pop(context); // Close the drawer
                 Navigator.push(
-                  // Navigate to SettingsPage
                   context,
                   MaterialPageRoute(
                       builder: (context) => AttandanceSplitPage()),
@@ -334,39 +265,46 @@ class _MembersListScreenState extends State<MembersListScreen> {
                 // Add navigation logic here
               },
             ),
-            // Add other menu items as needed
           ],
         ),
       ),
-      body: StreamBuilder<QuerySnapshot>(
-        stream: _membersStream,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else if (snapshot.data == null || snapshot.data!.docs.isEmpty) {
-            return Center(child: Text('No data available'));
-          } else {
-            return ListView.builder(
-              itemCount: snapshot.data!.docs.length,
-              itemBuilder: (context, index) {
-                final Map<String, dynamic> memberData =
-                    snapshot.data!.docs[index].data() as Map<String, dynamic>;
-                final String firstName = memberData['firstName'] ?? '';
-                final String middleName = memberData['middleName'] ?? '';
-                final String lastName = memberData['lastName'] ?? '';
-
-                return ListTile(
-                  leading: CircleAvatar(
-                    child: Icon(Icons.person),
+      body: ListView.builder(
+        itemCount: attendanceData.length,
+        itemBuilder: (context, index) {
+          final data = attendanceData[index];
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  data['title'],
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16.0,
                   ),
-                  title: Text('$firstName $middleName $lastName'),
-                  subtitle: Text('$_userLocation'), // Show user's location
-                );
-              },
-            );
-          }
+                ),
+              ),
+              DataTable(
+                columns: [
+                  DataColumn(label: Text('Particular')),
+                  DataColumn(label: Text('Male')),
+                  DataColumn(label: Text('Female')),
+                  DataColumn(label: Text('Cat. Total')),
+                ],
+                rows: data['data'].map<DataRow>((row) {
+                  return DataRow(
+                    cells: [
+                      DataCell(Text(row['particular'])),
+                      DataCell(Text(row['male'].toString())),
+                      DataCell(Text(row['female'].toString())),
+                      DataCell(Text(row['total'].toString())),
+                    ],
+                  );
+                }).toList(),
+              ),
+            ],
+          );
         },
       ),
     );

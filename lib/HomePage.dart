@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:sncapp/MemberList.dart';
 import 'package:sncapp/Satsang.dart';
+import 'package:sncapp/AttandanceSplit.dart';
 import 'package:sncapp/Settings.dart';
+import 'package:sncapp/LocalAttandance.dart';
 
 void main() {
   runApp(HomePage());
@@ -149,7 +151,8 @@ class _GroupsScreenState extends State<GroupsScreen> {
                 Navigator.push(
                   // Navigate to SettingsPage
                   context,
-                  MaterialPageRoute(builder: (context) => SettingsPage()),
+                  MaterialPageRoute(
+                      builder: (context) => LocalAttandancePage()),
                 );
               },
             ),
@@ -168,9 +171,9 @@ class _GroupsScreenState extends State<GroupsScreen> {
                 });
                 Navigator.pop(context); // Close the drawer
                 Navigator.push(
-                  // Navigate to SettingsPage
                   context,
-                  MaterialPageRoute(builder: (context) => SettingsPage()),
+                  MaterialPageRoute(
+                      builder: (context) => AttandanceSplitPage()),
                 );
               },
             ),
@@ -319,7 +322,8 @@ class _GroupsScreenState extends State<GroupsScreen> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => SatsangPage(groupName: groups[index - 1]),
+                    builder: (context) =>
+                        SatsangPage(groupName: groups[index - 1]),
                   ),
                 );
               },
