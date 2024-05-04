@@ -3,7 +3,9 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:sncapp/HomePage.dart';
+import 'package:sncapp/AttandanceSplit.dart';
 import 'package:sncapp/MemberList.dart';
+import 'package:sncapp/LocalAttandance.dart';
 import 'package:sncapp/main.dart';
 
 void main() async {
@@ -16,6 +18,7 @@ class SettingsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Settings',
       theme: ThemeData(
         primarySwatch: Colors.green,
@@ -45,10 +48,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Future<void> getUserData() async {
     User? user = FirebaseAuth.instance.currentUser;
     if (user != null) {
-      DocumentSnapshot<Map<String, dynamic>> userData = await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
+      DocumentSnapshot<Map<String, dynamic>> userData = await FirebaseFirestore
+          .instance
+          .collection('users')
+          .doc(user.uid)
+          .get();
       setState(() {
-        userName = userData['firstName']; // Assuming 'name' is the field for user's name in Firestore
-        uid = userData['uid']; // Assuming 'uid' is the field for user's UID in Firestore
+        userName = userData[
+            'firstName']; // Assuming 'name' is the field for user's name in Firestore
+        uid = userData[
+            'uid']; // Assuming 'uid' is the field for user's UID in Firestore
       });
     }
   }
@@ -59,7 +68,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
     // You may need to replace this with your login screen
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => SignInScreen()), // Replace LoginPage with your login screen
+      MaterialPageRoute(
+          builder: (context) =>
+              SignInScreen()), // Replace LoginPage with your login screen
     );
   }
 
@@ -161,7 +172,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 Navigator.push(
                   // Navigate to SettingsPage
                   context,
-                  MaterialPageRoute(builder: (context) => SettingsPage()),
+                  MaterialPageRoute(
+                      builder: (context) => LocalAttandancePage()),
                 );
               },
             ),
@@ -182,7 +194,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 Navigator.push(
                   // Navigate to SettingsPage
                   context,
-                  MaterialPageRoute(builder: (context) => SettingsPage()),
+                  MaterialPageRoute(
+                      builder: (context) => AttandanceSplitPage()),
                 );
               },
             ),
@@ -309,7 +322,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             Text('UID No- $uid'), // Display user's UID
             SizedBox(height: 16.0),
             TextButton(
-               onPressed: _logout, // Call logout function
+              onPressed: _logout, // Call logout function
               child: Text('Logout'),
             ),
           ],
