@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:sncapp/HomePage.dart';
 import 'package:sncapp/MemberList.dart';
+import 'package:sncapp/main.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(SettingsPage());
 }
 
@@ -26,8 +32,36 @@ class SettingsScreen extends StatefulWidget {
 
 class _SettingsScreenState extends State<SettingsScreen> {
   bool useInternet = false;
-
   int _selectedIndex = 6;
+  String userName = '';
+  String uid = '';
+
+  @override
+  void initState() {
+    super.initState();
+    getUserData();
+  }
+
+  Future<void> getUserData() async {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      DocumentSnapshot<Map<String, dynamic>> userData = await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
+      setState(() {
+        userName = userData['firstName']; // Assuming 'name' is the field for user's name in Firestore
+        uid = userData['uid']; // Assuming 'uid' is the field for user's UID in Firestore
+      });
+    }
+  }
+
+  Future<void> _logout() async {
+    await FirebaseAuth.instance.signOut();
+    // Navigate to login or initial screen after logout
+    // You may need to replace this with your login screen
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => SignInScreen()), // Replace LoginPage with your login screen
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -265,16 +299,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
             SizedBox(height: 16.0),
             Center(
               child: Text(
-                'Duggirala Satyaprasad',
+                userName, // Display user's name
                 style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
               ),
             ),
             SizedBox(height: 32.0),
             Text('Sync'),
             SizedBox(height: 32.0),
-            Text('UID No-'),
+            Text('UID No- $uid'), // Display user's UID
             SizedBox(height: 16.0),
-            Text('Logout'),
+            TextButton(
+               onPressed: _logout, // Call logout function
+              child: Text('Logout'),
+            ),
           ],
         ),
       ),

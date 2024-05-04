@@ -12,6 +12,9 @@ dependencies:
   flutter:
     sdk: flutter
   cloud_firestore: ^4.17.2
+  provider: ^6.1.2
+  shared_preferences: ^2.2.3
+  riverpod: ^2.5.1
 
 dev_dependencies:
   flutter_test:
