@@ -125,56 +125,60 @@ class _Page2State extends State<Page2> {
   }
 
   Future<void> _saveSelectedUsers() async {
-    // Get current timestamp
-    Timestamp timestamp = Timestamp.now();
+  // Get current timestamp
+  Timestamp timestamp = Timestamp.now();
 
-    // Filter checked users
-    List<Map<String, dynamic>> selectedUsers =
-        users.where((user) => checkboxValues[user['id']] ?? false).toList();
+  // Filter checked users
+  List<Map<String, dynamic>> selectedUsers =
+      users.where((user) => checkboxValues[user['id']] ?? false).toList();
 
-    // Check if any user is selected before saving data
-    if (selectedUsers.isNotEmpty) {
-      // Prepare data for submission
-      List<Map<String, dynamic>> dataToSubmit = selectedUsers.map((user) {
-        return {
-          'name': '${user['firstName']} ${user['middleName']} ${user['lastName']}',
-          'timestamp': timestamp,
-        };
-      }).toList();
+  // Filter out already submitted users
+  selectedUsers = selectedUsers.where((user) => !(submissionStatus[user['id']] ?? false)).toList();
 
-      // Submit data to Firestore
-      await FirebaseFirestore.instance
-          .collection('Groups')
-          .doc(widget.groupName)
-          .collection(widget.groupName)
-          .doc(widget.documentId)
-          .set({
-        'data': dataToSubmit,
-      });
+  // Check if any user is selected before saving data
+  if (selectedUsers.isNotEmpty) {
+    // Prepare data for submission
+    List<Map<String, dynamic>> dataToSubmit = selectedUsers.map((user) {
+      return {
+        'name': '${user['firstName']} ${user['middleName']} ${user['lastName']}',
+        'timestamp': timestamp,
+      };
+    }).toList();
 
-      // Update submission status for selected users
-      for (var user in selectedUsers) {
-        await saveSubmissionStatus(user['id'], true);
-      }
+    // Submit data to Firestore
+await FirebaseFirestore.instance
+    .collection('Groups')
+    .doc(widget.groupName)
+    .collection(widget.groupName)
+    .doc(widget.documentId)
+    .set({
+  'data': FieldValue.arrayUnion(dataToSubmit),
+}, SetOptions(merge: true));
 
-      // Show a snackbar or any other notification that data is saved
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Data Saved Successfully')),
-      );
-
-      // Refresh UI to disable checkboxes and save button after saving
-      setState(() {
-        for (var user in selectedUsers) {
-          submissionStatus[user['id']] = true;
-        }
-      });
-    } else {
-      // Show an error message if no user is selected
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Please select at least one user')),
-      );
+    // Update submission status for newly submitted users
+    for (var user in selectedUsers) {
+      await saveSubmissionStatus(user['id'], true);
     }
+
+    // Show a snackbar or any other notification that data is saved
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Data Saved Successfully')),
+    );
+
+    // Refresh UI to disable checkboxes and save button after saving
+    setState(() {
+      for (var user in selectedUsers) {
+        submissionStatus[user['id']] = true;
+      }
+    });
+  } else {
+    // Show an error message if no user is selected
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Please select at least one new user')),
+    );
   }
+}
+
 
   @override
   Widget build(BuildContext context) {
