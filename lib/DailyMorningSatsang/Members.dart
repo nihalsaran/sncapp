@@ -35,12 +35,14 @@ class _Page2State extends State<Page2> {
   late List<Map<String, dynamic>> users;
   late SharedPreferences prefs;
   late Map<String, bool> checkboxValues;
+  late Map<String, bool> submissionStatus;
 
   @override
   void initState() {
     super.initState();
     users = [];
     checkboxValues = {};
+    submissionStatus = {};
     fetchCurrentUserLocation();
     initializeSharedPreferences();
   }
@@ -54,12 +56,27 @@ class _Page2State extends State<Page2> {
     setState(() {
       checkboxValues = Map.fromIterable(users,
           key: (user) => user['id'],
-          value: (user) => prefs.getBool(user['id'].toString()) ?? false);
+          value: (user) => prefs.getBool('${user['id']}_checkbox') ?? false);
+      submissionStatus = Map.fromIterable(users,
+          key: (user) => user['id'],
+          value: (user) => prefs.getBool('${user['id']}_submitted') ?? false);
     });
   }
 
   void saveCheckboxValue(String userId, bool value) {
-    prefs.setBool(userId, value);
+    prefs.setBool('${userId}_checkbox', value);
+  }
+
+  void saveSubmissionStatus(String userId, bool value) {
+    prefs.setBool('${userId}_submitted', value);
+  }
+
+  void deleteSharedPreferences() async {
+    await prefs.clear();
+    setState(() {
+      checkboxValues.clear();
+      submissionStatus.clear();
+    });
   }
 
   Future<void> fetchCurrentUserLocation() async {
@@ -98,8 +115,52 @@ class _Page2State extends State<Page2> {
   void _handleCheckboxChange(String userId, bool value) {
     setState(() {
       checkboxValues[userId] = value;
+      if (value) {
+        saveSubmissionStatus(userId, true); // Set submitted status to true when checkbox is checked
+      }
     });
     saveCheckboxValue(userId, value); // Save the checkbox state
+  }
+
+  Future<void> _saveSelectedUsers() async {
+    // Get current timestamp
+    Timestamp timestamp = Timestamp.now();
+
+    // Filter checked users
+    List<Map<String, dynamic>> selectedUsers =
+        users.where((user) => checkboxValues[user['id']] ?? false).toList();
+
+    // Prepare data for submission
+    List<Map<String, dynamic>> dataToSubmit = selectedUsers.map((user) {
+      return {
+        'name':
+            '${user['firstName']} ${user['middleName']} ${user['lastName']}',
+        'timestamp': timestamp,
+      };
+    }).toList();
+
+    // Check if any user is selected before saving data
+    if (selectedUsers.isNotEmpty) {
+      // Submit data to Firestore
+      await FirebaseFirestore.instance
+          .collection('Groups')
+          .doc(widget.groupName)
+          .collection(widget.groupName)
+          .doc(widget.documentId)
+          .set({
+        'data': dataToSubmit,
+      });
+
+      // Show a snackbar or any other notification that data is saved
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Data Saved Successfully')),
+      );
+    } else {
+      // Show an error message if no user is selected
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Please select at least one user')),
+      );
+    }
   }
 
   @override
@@ -110,12 +171,16 @@ class _Page2State extends State<Page2> {
         actions: [
           if (checkboxValues.containsValue(true))
             TextButton(
-              onPressed: () {},
+              onPressed: _saveSelectedUsers,
               child: Text(
                 'SAVE',
                 style: TextStyle(color: Colors.black),
               ),
             ),
+          IconButton(
+            icon: Icon(Icons.delete),
+            onPressed: deleteSharedPreferences,
+          ),
         ],
       ),
       body: ListView.builder(
@@ -133,9 +198,11 @@ class _Page2State extends State<Page2> {
             subtitle: Text(user['location']),
             trailing: Checkbox(
               value: checkboxValues[userId] ?? false,
-              onChanged: (value) {
-                _handleCheckboxChange(userId, value ?? false);
-              },
+              onChanged: submissionStatus[userId] != true
+                  ? (value) {
+                      _handleCheckboxChange(userId, value ?? false);
+                    }
+                  : null, // Disable checkbox if user is already submitted
             ),
           );
         },
