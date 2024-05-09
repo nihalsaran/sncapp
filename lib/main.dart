@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart'; // Added
+import 'package:sncapp/cubit/face_cubit.dart'; // Added
 import 'package:sncapp/firebase_options.dart';
 import 'package:sncapp/HomePage.dart';
 
@@ -17,13 +19,16 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'SNC Haazri',
-      theme: ThemeData(
-        primaryColor: Colors.green,
+    return BlocProvider(
+      create: (context) => FaceCubit(), // Added
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'SNC Haazri',
+        theme: ThemeData(
+          primaryColor: Colors.green,
+        ),
+        home: SignInScreen(),
       ),
-      home: SignInScreen(),
     );
   }
 }
@@ -133,6 +138,13 @@ class _SignInScreenState extends State<SignInScreen> {
                     color: Colors.red,
                     fontSize: 14.0,
                   ),
+                ),
+                // Add BlocBuilder to use FaceCubit state
+                BlocBuilder<FaceCubit, FaceState>(
+                  builder: (context, state) {
+                    // Handle FaceCubit state here
+                    return Container(); // Placeholder, replace with actual widget
+                  },
                 ),
               ],
             ),

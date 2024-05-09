@@ -10,7 +10,7 @@ void main() {
 
 class Dailymorning extends StatefulWidget {
   final String documentId;
-   final String groupName;
+  final String groupName;
 
   Dailymorning({required this.documentId, required this.groupName});
 
@@ -18,15 +18,13 @@ class Dailymorning extends StatefulWidget {
   _DailymorningState createState() => _DailymorningState();
 }
 
-class _DailymorningState extends State<Dailymorning>
-    with SingleTickerProviderStateMixin {
-  late TabController _tabController;
+class _DailymorningState extends State<Dailymorning> {
+  int _selectedIndex = 0;
 
-  @override
-  void initState() {
-    super.initState();
-    _tabController =
-        TabController(length: 4, vsync: this); // Increased length to 4
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
   }
 
   @override
@@ -47,33 +45,48 @@ class _DailymorningState extends State<Dailymorning>
             style: TextStyle(color: Colors.white),
           ),
           backgroundColor: Colors.green,
-          bottom: TabBar(
-            controller: _tabController,
-            tabs: [
-              Tab(text: 'Face'),
-              Tab(text: 'Members'),
-              Tab(text: 'Visitors'),
-              Tab(text: 'Guests'), // Added Tab for the fourth page
-            ],
-            indicatorColor: Colors.white,
-          ),
         ),
-        body: TabBarView(
-          controller: _tabController,
-          children: [
-            Page1(),
-            Page2(documentId: widget.documentId, groupName: widget.groupName), // Pass documentId to Page2
-            Page3(),
-            Page4(),
-          ],
-        ),
+        body: _getBodyWidget(_selectedIndex),
+        bottomNavigationBar: BottomNavigationBar(
+  items: const <BottomNavigationBarItem>[
+    BottomNavigationBarItem(
+      icon: Icon(Icons.face),
+      label: 'Face',
+    ),
+    BottomNavigationBarItem(
+      icon: Icon(Icons.people),
+      label: 'Members',
+    ),
+    BottomNavigationBarItem(
+      icon: Icon(Icons.group),
+      label: 'Visitors',
+    ),
+    BottomNavigationBarItem(
+      icon: Icon(Icons.person),
+      label: 'Guests',
+    ),
+  ],
+  currentIndex: _selectedIndex,
+  selectedItemColor: Colors.green, // Change this to the desired selected item color
+  unselectedItemColor: Colors.black, // Change this to the desired unselected item color
+  onTap: _onItemTapped,
+),
       ),
     );
   }
 
-  @override
-  void dispose() {
-    _tabController.dispose();
-    super.dispose();
+  Widget _getBodyWidget(int index) {
+    switch (index) {
+      case 0:
+        return Page1();
+      case 1:
+        return Page2(documentId: widget.documentId, groupName: widget.groupName);
+      case 2:
+        return Page3();
+      case 3:
+        return Page4();
+      default:
+        return Container();
+    }
   }
 }
