@@ -22,19 +22,19 @@ class _HomePageState extends State<HomePage> {
         children: <Widget>[
           Center(
             child: SizedBox(
-              width: 100,
+              width: 200,
               child: ElevatedButton(
                 onPressed: () {
                   showDialog(
                       context: context, builder: (_) => const NameDialog());
                 },
-                child: const Text('Add'),
+                child: const Text('Add-Face'),
               ),
             ),
           ),
           Center(
             child: SizedBox(
-              width: 100,
+              width: 200,
               child: ElevatedButton(
                 onPressed: () {
                   Navigator.push(
@@ -48,7 +48,7 @@ class _HomePageState extends State<HomePage> {
                     ),
                   );
                 },
-                child: const Text('Detect'),
+                child: const Text('Face-Attendance'),
               ),
             ),
           )

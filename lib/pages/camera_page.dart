@@ -426,21 +426,6 @@ class _CameraPageState extends State<CameraPage> with WidgetsBindingObserver {
         }
       },
       child: Scaffold(
-        appBar: AppBar(
-          elevation: 0,
-          leading: IconButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            icon: const Icon(
-              Icons.chevron_left_rounded,
-              size: 30,
-            ),
-          ),
-          title: const Text(
-            'Camera Page',
-          ),
-        ),
         body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
           child: cameraView(),
