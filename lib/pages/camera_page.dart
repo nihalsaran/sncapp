@@ -15,12 +15,14 @@ import 'package:google_mlkit_face_detection/google_mlkit_face_detection.dart';
 import 'package:image_editor/image_editor.dart';
 
 class CameraPage extends StatefulWidget {
-  const CameraPage({Key? key, required this.isAdd, this.name})
-      : super(key: key);
+  const CameraPage({Key? key, required this.isAdd, this.name, required this.groupName, required this.documentId}): super(key: key);
   // To distinguish whether the process is adding or detecting
   final bool isAdd;
   // If process is adding will have name from dialog before navigating to this page
   final String? name;
+  // New parameters
+  final String groupName;
+  final String documentId;
 
   @override
   State<CameraPage> createState() => _CameraPageState();
@@ -414,7 +416,11 @@ class _CameraPageState extends State<CameraPage> with WidgetsBindingObserver {
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-              builder: (context) => ResultPage(data: state.data),
+              builder: (context) => ResultPage(
+                data: state.data,
+                groupName: widget.groupName,
+                documentId: widget.documentId,
+                ),
             ),
           );
         }

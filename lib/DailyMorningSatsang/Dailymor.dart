@@ -78,7 +78,7 @@ class _DailymorningState extends State<Dailymorning> {
   Widget _getBodyWidget(int index) {
     switch (index) {
       case 0:
-        return Page1();
+       return Page1(documentId: widget.documentId, groupName: widget.groupName);
       case 1:
         return Page2(documentId: widget.documentId, groupName: widget.groupName);
       case 2:

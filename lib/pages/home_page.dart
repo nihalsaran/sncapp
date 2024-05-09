@@ -1,10 +1,12 @@
+import 'package:flutter/material.dart';
 import 'package:sncapp/pages/camera_page.dart';
 import 'package:sncapp/widget/name_dialog.dart';
-import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key, required this.title});
+  const HomePage({Key? key, required this.title, required this.groupName, required this.documentId}) : super(key: key);
   final String title;
+  final String groupName;
+  final String documentId;
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -41,8 +43,10 @@ class _HomePageState extends State<HomePage> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (_) => const CameraPage(
+                      builder: (_) => CameraPage(
                         isAdd: false,
+                        groupName: widget.groupName,
+                        documentId: widget.documentId,
                       ),
                     ),
                   );

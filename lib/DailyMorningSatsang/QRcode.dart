@@ -2,11 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:sncapp/pages/home_page.dart';
 
 void main() {
-  runApp(const Page1());
+  runApp(Page1(groupName: "YourGroupName", documentId: "YourDocumentId"));
 }
 
 class Page1 extends StatelessWidget {
-  const Page1({Key? key}) : super(key: key);
+  final String groupName;
+  final String documentId;
+
+  const Page1({Key? key, required this.groupName, required this.documentId}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +18,7 @@ class Page1 extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const HomePage(title: 'Flutter Face Recognition'),
+      home: HomePage(title: 'Flutter Face Recognition', groupName: groupName, documentId: documentId),
     );
   }
 }

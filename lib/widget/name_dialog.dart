@@ -52,7 +52,8 @@ class _NameDialogState extends State<NameDialog> {
                 MaterialPageRoute(
                   builder: (_) => CameraPage(
                     isAdd: true,
-                    name: textController.text,
+                    name: textController.text, groupName: '', documentId: '',
+                    
                   ),
                 ),
               );
