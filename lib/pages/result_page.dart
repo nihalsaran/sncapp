@@ -34,9 +34,7 @@ class ResultPage extends StatelessWidget {
         });
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Result'),
-      ),
+      
       body: SizedBox(
         width: double.maxFinite,
         child: Column(
