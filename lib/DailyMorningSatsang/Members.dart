@@ -88,7 +88,7 @@ class _Page2State extends State<Page2> {
     });
   }
 
-  Future<void> fetchCurrentUserLocation() async {
+  Future<String?> fetchCurrentUserLocation() async {
     User? user = FirebaseAuth.instance.currentUser;
     if (user != null) {
       DocumentSnapshot userDoc = await FirebaseFirestore.instance
@@ -117,8 +117,10 @@ class _Page2State extends State<Page2> {
         });
 
         loadCheckboxValues();
+        return user.uid; // Return the user's uid
       }
     }
+    return null; // Return null if user or location is not found
   }
 
   Future<void> _handleCheckboxChange(String userId, bool? value) async {
@@ -132,6 +134,8 @@ class _Page2State extends State<Page2> {
     // Get current timestamp
     Timestamp timestamp = Timestamp.now();
 
+    var submittedUser = await fetchCurrentUserLocation();
+
     // Filter checked users
     List<Map<String, dynamic>> selectedUsers =
         users.where((user) => checkboxValues[user['id']] ?? false).toList();
@@ -144,26 +148,24 @@ class _Page2State extends State<Page2> {
     // Check if any user is selected before saving data
     if (selectedUsers.isNotEmpty) {
       // Prepare data for submission
-      List<Map<String, dynamic>> dataToSubmit = selectedUsers.map((user) {
-        return {
+      for (var user in selectedUsers) {
+        await FirebaseFirestore.instance
+            .collection('Groups')
+            .doc(widget.groupName)
+            .collection(widget.groupName)
+            .doc(widget.documentId)
+            .collection(DateTime.now().toString().split(
+                ' ')[0]) // Use the current day's date as the collection name
+            .doc(
+                '${user['firstName']} ${user['middleName']} ${user['lastName']}') // Use the user's full name as the document ID
+            .set({
           'name':
               '${user['firstName']} ${user['middleName']} ${user['lastName']}',
           'timestamp': timestamp,
-        };
-      }).toList();
+          'SubmittedUser': submittedUser,
+        });
 
-      // Submit data to Firestore
-      await FirebaseFirestore.instance
-          .collection('Groups')
-          .doc(widget.groupName)
-          .collection(widget.groupName)
-          .doc(widget.documentId)
-          .set({
-        'data': FieldValue.arrayUnion(dataToSubmit),
-      }, SetOptions(merge: true));
-
-      // Update submission status for newly submitted users
-      for (var user in selectedUsers) {
+        // Update submission status for newly submitted users
         await saveSubmissionStatus(user['id'], true);
       }
 
